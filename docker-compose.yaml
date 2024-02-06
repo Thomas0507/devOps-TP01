@@ -25,7 +25,7 @@ services:
       - db
       
   my-apache-server:
-    build: .
+    build: my-apache-server
     container_name: my-apache-server-container
     ports:
       - "8081:80"
