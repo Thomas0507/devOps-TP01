@@ -255,7 +255,7 @@ sudo docker run --net=app-network --name my-running-app -p 8080:80 http/http
 
 ❓ Why do we need a reverse proxy?
 
-💡 Pour ne pas exposer directement le port de notre container.
+💡 Pour ne pas exposer directement le port de notre container. On doit forcément passer par notre front.
 
 ## Link application
 
@@ -289,7 +289,7 @@ services:
       - db
       
   my-apache-server:
-    build: .
+    build: my-apache-server
     container_name: my-apache-server-container
     ports:
       - "8081:80"
@@ -302,14 +302,15 @@ networks:
     driver: bridge
 ```
 On met à jour application.yaml de notre springboot pour prendre en charge les variables d'environnements: 
-
+```
 applications.yaml
   datasource:
     url: jdbc:postgresql://${URL}/${POSTGRES_DB}
     username: ${POSTGRES_USER} 
     password: ${POSTGRES_PASSWORD}
-
+```
 De même pour le serveur apache, on met à jour le fichier de conf httpd.conf:
-
+```
 ProxyPass / http://springboot-app:8080/
+```
 ProxyPassReverse / http://springboot-app:8080/
