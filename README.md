@@ -314,3 +314,11 @@ De même pour le serveur apache, on met à jour le fichier de conf httpd.conf:
 ProxyPass / http://springboot-app:8080/
 ```
 ProxyPassReverse / http://springboot-app:8080/
+
+❓ Why is docker-compose so important?
+
+💡 Car cela permet de lancer & de configurer plusieur docker de manière automatique.
+
+## Publish
+
+*TODO*
