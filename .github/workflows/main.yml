@@ -7,6 +7,7 @@ on:
 
 jobs:
   sonarcloud:
+    needs: test-backend
       name: SonarCloud
       runs-on: ubuntu-latest
       steps:
