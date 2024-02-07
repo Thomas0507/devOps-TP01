@@ -45,18 +45,18 @@ jobs:
           context: ./simple-api-student
           # Note: tags has to be all lower-case
           tags:  ${{secrets.DOCKERHUB_USERNAME}}/tp-devops-simple-api:latest
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: ${{ github.ref == 'refs/heads/master' }}
       # DO the same for database
       - name: Build image and push database
         uses: docker/build-push-action@v3
         with:
           context: ./database
           tags:  ${{secrets.DOCKERHUB_USERNAME}}/tp-database:latest
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: ${{ github.ref == 'refs/heads/master' }}
       # DO the same for httpd
       - name: Build image and push httpd
         uses: docker/build-push-action@v3
         with:
           context: ./my-apache-server
           tags:  ${{secrets.DOCKERHUB_USERNAME}}/my-apache-server:latest
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: ${{ github.ref == 'refs/heads/master' }}
