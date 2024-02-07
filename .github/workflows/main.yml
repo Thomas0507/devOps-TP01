@@ -7,7 +7,7 @@ on:
 
 jobs:
   sonarcloud:
-    needs: test-backend
+    needs: build-and-push-docker-image
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
