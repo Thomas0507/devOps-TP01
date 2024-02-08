@@ -1,0 +1,14 @@
+- name: Run HTTPD
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  docker_container:
+    name: httpd
+    image: thomas0507/my-apache-server:latest
+    networks:
+      - name: "{{ DOCKER_NETWORK }}" 
+    ports:
+      - 8080:80
+    env:
+      API_URL: "{{ API_CONTAINER }}"
+    recreate: true
+    pull: true

@@ -1,0 +1,20 @@
+- name: Run database
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  docker_container:
+    name: "{{ POSTGRES_CONTAINER }}"
+    image: thomas0507/tp-database:latest
+    networks:
+      - name: "{{ DOCKER_NETWORK }}"
+    env:
+      URL: "db:5432"
+      POSTGRES_CONTAINER: "{{POSTGRES_CONTAINER }}"
+      POSTGRES_DB: "{{ POSTGRES_DB }}"
+      POSTGRES_USER: "{{ POSTGRES_USER }}"
+      POSTGRES_PASSWORD: "{{ POSTGRES_PASSWORD }}"
+    volumes:
+      - myvolume:/var/lib/postgresql/data
+    recreate:
+      true
+    pull:
+      true
