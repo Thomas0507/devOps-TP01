@@ -8,7 +8,7 @@
       - name: "{{ DOCKER_NETWORK }}" 
     ports:
       - 8080:80
-    env:
-      API_URL: "{{ API_CONTAINER }}"
+    # env:
+    #   API_URL: "{{ API_CONTAINER }}"
     recreate: true
     pull: true
