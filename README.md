@@ -322,3 +322,190 @@ ProxyPassReverse / http://springboot-app:8080/
 ## Publish
 
 *TODO*
+
+
+
+# DevOps - Compte rendu 
+
+## TP 02 - Github Action 🚀🚀🚀
+
+
+### Build and test your Application
+
+❓ What are testcontainers?
+
+💡 x
+
+❓ Document your Github Actions configurations
+
+💡 x
+
+
+### Setup Quality Gate
+
+
+###     Bonus: split pipelines (Optional)
+
+
+## TP 03 - Ansible
+
+On installe ansible & on lui crée un inventaire à la racine:
+
+```
+mkdir ansible
+cd ansible
+mkdir inventories
+cd inventories
+touch setup.yml
+```
+
+Contenue du setup.yml:
+```
+all:
+ vars:
+   ansible_user: centos
+   ansible_ssh_private_key_file: /home/pc/.ssh/id_rsa
+ children:
+   prod:
+     hosts: thomas.marin.takima.cloud
+```
+
+On peut maintenant ping:
+
+```
+sudo ansible all -i ansible/inventories/setup.yml -m ping
+```
+
+Réponse:
+
+```
+thomas.marin.takima.cloud | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+```
+Vérifier la conf:
+
+```
+ansible all -i ansible/inventories/setup.yml -m setup -a  "filter=ansible_distribution*"
+```
+Réponse:
+```
+thomas.marin.takima.cloud | SUCCESS => {
+    "ansible_facts": {
+        "ansible_distribution": "CentOS",
+        "ansible_distribution_file_parsed": true,
+        "ansible_distribution_file_path": "/etc/redhat-release",
+        "ansible_distribution_file_variety": "RedHat",
+        "ansible_distribution_major_version": "7",
+        "ansible_distribution_release": "Core",
+        "ansible_distribution_version": "7.9",
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false
+}
+```
+
+Si on avait httpd installé sur le serveur ansible, on le désinstalle:
+
+```
+ansible all -i ansible/inventories/setup.yml -m yum -a "name=httpd state=absent" --become
+```
+❓ Document your inventory and base commands
+
+💡 Inventaire:
+- On fournit en variable le chemin vers notre clé ssh, et l'utilisateur.
+- On fournit l'adresse de notre serveur
+
+### Playbooks
+
+Création d'un fichier playbook.yml:
+
+```
+touch ansible/playbook.yml
+```
+
+Ping:
+
+```
+ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
+```
+
+
+### Advanced Playbooks
+
+```
+# Install Docker
+- hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install device-mapper-persistent-data
+      yum:
+        name: device-mapper-persistent-data
+        state: latest
+
+    - name: Install lvm2
+      yum:
+        name: lvm2
+        state: latest
+
+    - name: add repo docker
+      command:
+        cmd: sudo yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: present
+
+    - name: Install python3
+      yum:
+        name: python3
+        state: present
+
+    - name: Install docker with Python 3
+      pip:
+        name: docker
+        executable: pip3
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+
+    - name: Make sure Docker is running
+      service: name=docker state=started
+      tags: docker
+```
+
+❓ Document your playbook
+
+💡 Chaque task s'occupe de lancer un yum install avec les paramètres fournis.
+
+Créer un rôle:
+
+```
+ansible-galaxy init roles/<NOM_DU_ROLE>
+```
+
+Chaque sous dossier du dossier roles est un rôle & on peut les executer de puis le playbook.yml
+
+Roles :
+- app
+- database
+- docker
+- network
+- proxy
+
+Lancer les rôles depuis le playbook.yml:
+
+```
+  roles:
+    - app
+    - database
+    - docker
+    - network
+    - proxy
+```
+

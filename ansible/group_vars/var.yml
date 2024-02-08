@@ -9,3 +9,6 @@ DOCKER_NETWORK: app-network
 
 #backend
 API_CONTAINER: springboot-app-container
+
+# front 
+VUE_APP_API_URL:
